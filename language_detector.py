@@ -1,25 +1,25 @@
-from wsgiservice import *
-import guess_language
+import sys
+from controllers import runserver
+from tests import *
 
+"""A simple REST web service that detects the language of an input string
 
-@mount('/')
-class Documents(Resource):
+   To run the service use [run] option
 
-    EXTENSION_MAP = [('.json', 'application/json')]
-
-    def POST(self):
-        """Detect the language of an input string"""
-
-        response = {}
-        text = self.request.POST.get('text')
-        if text:
-            response['language'] = guess_language.guessLanguage(text)
-
-        return response
-
-app = get_app(globals())
+   To run tests use [test] option
+"""
 
 if __name__ == "__main__":
-    from wsgiref.simple_server import make_server
-    print "Running on port 8000"
-    make_server('', 8000, app).serve_forever()
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'run':
+            app = get_app(globals())
+            runserver(app, 8000)
+        elif sys.argv[1] == 'test':
+            run_tests()
+    else:
+        print """Usage: language_detector.py [options]
+
+OPTIONS:
+  run       Run the application
+  test      Run tests
+"""
