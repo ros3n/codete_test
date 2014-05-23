@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>controllers.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>controllers.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">wsgiservice</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">guess_language</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Resource to be served with WsgiService</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@mount</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LanguageDetector</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Accepts POST requests, for other methods raises error 501 Not Implemented error</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">KNOWN_METHODS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;POST&#39;</span><span class="p">]</span>
+    <span class="n">EXTENSION_MAP</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;.json&#39;</span><span class="p">,</span> <span class="s">&#39;application/json&#39;</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Detects the language of an input string</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>:returns: a json with an information about the language of the input string or an empty dict</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;text&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">[</span><span class="s">&#39;language&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">guess_language</span><span class="o">.</span><span class="n">guessLanguage</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Runs a WSGI server that serves a given app on the specified port</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">runserver</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>:param app: an app to be served</p>
+<p>:param port: a port that will be used to serve the app</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span>
+    <span class="k">print</span> <span class="s">&quot;Running on port {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+    <span class="n">make_server</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
